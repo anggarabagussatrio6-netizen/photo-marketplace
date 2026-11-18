@@ -1,252 +1,396 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>FotoKita - Marketplace Foto</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="css/style.css">
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #222;
-        }
-
-        nav {
-            background: #111;
-            color: white;
-            padding: 18px 7%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        .nav-buttons a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-        }
-
-        .hero {
-            min-height: 450px;
-            padding: 80px 7%;
-            display: flex;
-            align-items: center;
-            background:
-                linear-gradient(
-                    rgba(0,0,0,0.55),
-                    rgba(0,0,0,0.55)
-                ),
-                url("https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1600&q=80");
-            background-size: cover;
-            background-position: center;
-            color: white;
-        }
-
-        .hero-content {
-            max-width: 650px;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .button {
-            display: inline-block;
-            background: white;
-            color: #111;
-            padding: 14px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .section {
-            padding: 50px 7%;
-        }
-
-        .section h2 {
-            margin-bottom: 25px;
-        }
-
-        .photos {
-            display: grid;
-            grid-template-columns:
-                repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-content {
-            padding: 18px;
-        }
-
-        .card h3 {
-            margin-bottom: 8px;
-        }
-
-        .photographer {
-            color: #777;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .price {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        footer {
-            background: #111;
-            color: #aaa;
-            text-align: center;
-            padding: 25px;
-        }
-
-        @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 34px;
-            }
-
-            nav {
-                padding: 15px 5%;
-            }
-
-            .nav-buttons a {
-                margin-left: 10px;
-            }
-        }
-    </style>
 </head>
+
 
 <body>
 
-    <nav>
-        <div class="logo">📷 FotoKita</div>
 
-        <div class="nav-buttons">
-            <a href="#">Explore</a>
-            <a href="#">Login</a>
-            <a href="#">Daftar</a>
+<nav class="navbar">
+
+    <div class="logo">
+        📷 FotoKita
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="index.html">
+            Marketplace
+        </a>
+
+        <a href="login.html" id="loginLink">
+            Login
+        </a>
+
+        <a href="register.html" id="registerLink">
+            Daftar
+        </a>
+
+        <a href="dashboard.html"
+           id="dashboardLink"
+           style="display:none;">
+            Dashboard
+        </a>
+
+        <a href="#"
+           id="logoutLink"
+           onclick="logoutUser()"
+           style="display:none;">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <div class="panel"
+         style="text-align:center; padding:50px 25px;">
+
+        <h1>
+            Temukan Foto Terbaik
+        </h1>
+
+        <p style="margin-top:12px; color:#666;">
+
+            Jelajahi dan beli karya fotografi
+            dari para kreator.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- SEARCH -->
+
+    <div class="panel">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔎 Cari foto..."
+            oninput="loadPhotos()">
+
+    </div>
+
+
+
+    <!-- MARKETPLACE -->
+
+    <div>
+
+        <h2 style="margin-bottom:20px;">
+            Karya Terbaru
+        </h2>
+
+
+        <div
+            id="photoGrid"
+            class="photo-grid">
+
         </div>
-    </nav>
 
-    <section class="hero">
+    </div>
 
-        <div class="hero-content">
 
-            <h1>
-                Pamerkan Karyamu.
-                Jual Fotomu.
-            </h1>
+</div>
 
-            <p>
-                Tempat fotografer memamerkan karya,
-                menemukan pembeli, dan mendapatkan
-                penghasilan dari hasil fotografi mereka.
-            </p>
 
-            <a href="#" class="button">
-                Mulai Menjual
-            </a>
 
-        </div>
+<!-- SUPABASE -->
 
-    </section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <section class="section">
+<script src="js/supabase.js"></script>
 
-        <h2>Foto Terbaru</h2>
 
-        <div class="photos">
 
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80">
+<script>
 
-                <div class="card-content">
-                    <h3>Mountain Morning</h3>
 
-                    <div class="photographer">
-                        Foto oleh Andi
-                    </div>
+/* =========================
+   CEK USER
+========================= */
 
-                    <div class="price">
-                        Rp50.000
-                    </div>
+async function checkUser() {
+
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+
+    if (user) {
+
+        document.getElementById(
+            "loginLink"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "registerLink"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "dashboardLink"
+        ).style.display = "inline";
+
+
+        document.getElementById(
+            "logoutLink"
+        ).style.display = "inline";
+
+    }
+
+}
+
+
+
+/* =========================
+   LOAD FOTO
+========================= */
+
+async function loadPhotos() {
+
+    const grid =
+        document.getElementById(
+            "photoGrid"
+        );
+
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        ).value.trim();
+
+
+    grid.innerHTML =
+        "<p>Memuat foto...</p>";
+
+
+    let query =
+        supabaseClient
+            .from("photos")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (search) {
+
+        query =
+            query.or(
+                `title.ilike.%${search}%,description.ilike.%${search}%`
+            );
+
+    }
+
+
+    const {
+        data,
+        error
+    } = await query;
+
+
+    if (error) {
+
+        console.error(error);
+
+        grid.innerHTML =
+            "<p>Gagal mengambil foto.</p>";
+
+        return;
+
+    }
+
+
+    if (!data || data.length === 0) {
+
+        grid.innerHTML =
+            "<p>Belum ada foto yang tersedia.</p>";
+
+        return;
+
+    }
+
+
+    grid.innerHTML = "";
+
+
+    data.forEach(photo => {
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "photo-card";
+
+
+        card.innerHTML = `
+
+            <img
+                src="${photo.image_url}"
+                alt="${escapeHtml(
+                    photo.title
+                )}">
+
+
+            <div class="photo-info">
+
+                <h3>
+                    ${escapeHtml(
+                        photo.title
+                    )}
+                </h3>
+
+
+                <p style="margin-top:8px;">
+                    ${escapeHtml(
+                        photo.description || ""
+                    )}
+                </p>
+
+
+                <div class="price">
+
+                    Rp${Number(
+                        photo.price
+                    ).toLocaleString(
+                        "id-ID"
+                    )}
+
                 </div>
+
+
+                <button
+                    class="btn btn-primary btn-full"
+                    style="margin-top:12px;"
+                    onclick="buyPhoto('${photo.id}')">
+
+                    🛒 Beli Foto
+
+                </button>
+
             </div>
 
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80">
+        `;
 
-                <div class="card-content">
-                    <h3>Nature Escape</h3>
 
-                    <div class="photographer">
-                        Foto oleh Budi
-                    </div>
+        grid.appendChild(card);
 
-                    <div class="price">
-                        Rp75.000
-                    </div>
-                </div>
-            </div>
+    });
 
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80">
+}
 
-                <div class="card-content">
-                    <h3>Blue Ocean</h3>
 
-                    <div class="photographer">
-                        Foto oleh Sinta
-                    </div>
 
-                    <div class="price">
-                        Rp100.000
-                    </div>
-                </div>
-            </div>
+/* =========================
+   BELI
+========================= */
 
-        </div>
+async function buyPhoto(photoId) {
 
-    </section>
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
 
-    <footer>
-        © 2026 FotoKita — Marketplace Fotografi
-    </footer>
+
+    if (!user) {
+
+        alert(
+            "Silakan login terlebih dahulu."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    alert(
+        "Sistem pembayaran belum diaktifkan. Kita buat setelah marketplace selesai."
+    );
+
+}
+
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
+
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logoutUser() {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.reload();
+
+}
+
+
+
+/* =========================
+   START
+========================= */
+
+checkUser();
+
+loadPhotos();
+
+
+</script>
+
 
 </body>
+
 </html>
