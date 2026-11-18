@@ -316,6 +316,7 @@ async function loadPhotos() {
    BELI
 ========================= */
 
+
 async function buyPhoto(photoId) {
 
     const {
@@ -323,17 +324,14 @@ async function buyPhoto(photoId) {
     } = await supabaseClient.auth.getUser();
 
     if (!user) {
-
         window.location.href = "login.html";
-
         return;
-
     }
 
-    window.location.href =
-        "photo.html?id=" + photoId;
+    window.location.href = "photo.html?id=" + photoId;
 
 }
+
 
 
     alert(
