@@ -1,6 +1,7 @@
-function registerUser() {
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
+
+async function registerUser() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     if (!name || !email || !password) {
@@ -8,44 +9,75 @@ function registerUser() {
         return;
     }
 
-    localStorage.setItem("demoUser", JSON.stringify({
-        name: name,
-        email: email
-    }));
-
-    alert("Pendaftaran berhasil!");
-
-    window.location.href = "login.html";
-}
-
-
-function loginUser() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const user = JSON.parse(localStorage.getItem("demoUser"));
-
-    if (!user || user.email !== email || !password) {
-        alert("Email atau password salah.");
+    if (password.length < 6) {
+        alert("Password minimal 6 karakter.");
         return;
     }
 
-    localStorage.setItem("loggedIn", "true");
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: {
+                name: name
+            }
+        }
+    });
+
+    if (error) {
+        alert("Pendaftaran gagal: " + error.message);
+        return;
+    }
+
+    if (data.session) {
+        alert("Pendaftaran berhasil!");
+        window.location.href = "dashboard.html";
+    } else {
+        alert("Pendaftaran berhasil! Silakan cek email untuk verifikasi akun.");
+        window.location.href = "login.html";
+    }
+}
+
+
+async function loginUser() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+        alert("Email dan password harus diisi.");
+        return;
+    }
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        alert("Login gagal: " + error.message);
+        return;
+    }
 
     window.location.href = "dashboard.html";
 }
 
 
-function logoutUser() {
-    localStorage.removeItem("loggedIn");
+async function logoutUser() {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        alert("Logout gagal: " + error.message);
+        return;
+    }
+
     window.location.href = "index.html";
 }
 
 
-function checkLogin() {
-    const loggedIn = localStorage.getItem("loggedIn");
+async function checkLogin() {
+    const { data, error } = await supabaseClient.auth.getUser();
 
-    if (loggedIn !== "true") {
+    if (error || !data.user) {
         window.location.href = "login.html";
     }
 }
