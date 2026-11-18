@@ -322,19 +322,18 @@ async function buyPhoto(photoId) {
         data: { user }
     } = await supabaseClient.auth.getUser();
 
-
     if (!user) {
 
-        alert(
-            "Silakan login terlebih dahulu."
-        );
-
-        window.location.href =
-            "login.html";
+        window.location.href = "login.html";
 
         return;
 
     }
+
+    window.location.href =
+        "photo.html?id=" + photoId;
+
+}
 
 
     alert(
